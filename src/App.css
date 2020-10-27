@@ -1,2 +1,17 @@
 .App {
 }
+
+.ItemImage {
+  width: 50vw;
+}
+.ItemImage img {
+  /* width: 150px; */
+}
+
+.Home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* align-content: center; */
+  text-align: center;
+}

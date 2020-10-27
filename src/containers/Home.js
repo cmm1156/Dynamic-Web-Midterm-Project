@@ -5,10 +5,11 @@ import { useHistory } from "react-router-dom";
 //import component files
 import Header from "../components/Header"; // imports the function Header() which writes the my header / found in the file Header.js
 
-// const rebrickKey form "./.env"
-
 // my Rebrickable API key
-const rebrickKey = `abf9be335b49755a93e9a68d4186ef36`;
+// const rebrickKey = `abf9be335b49755a93e9a68d4186ef36`;
+// Extract hidden api keys
+// console.log("ENV VALUE:", process.env.REACT_APP_REBRICK_API_KEY);
+const rebrickKey = process.env.REACT_APP_REBRICK_API_KEY;
 
 // ##### THIS IS THE MAIN FUNCTION WHICH DISPLAYS THE ENTIRE PAGE ##### // goes down to last line of this file
 function Home() {
@@ -19,8 +20,7 @@ function Home() {
   ] = useState(null); // sets the state (url) of the data being bulled from Rebrickable
   const [theme_id /*current*/, setTheme_id /*new*/] = useState("158"); // sets the state of the theme id // default is set to "158" (star wars)
 
-  // Extract hidden api keys
-  // console.log("ENV VALUE: " + process.env.REACT_APP_REBRICK_API_KEY);
+  // const [productData, setProductData] = useState(false);
 
   // this useEffect() will run when the variable specified in the array changes
   // in this case, useEffect() will run them the theme_id changes
@@ -31,15 +31,18 @@ function Home() {
         // `https://rebrickable.com/api/v3/lego/sets/?theme_id=${theme_id}/?key=${rebrickKey}`
         // `https://rebrickable.com/api/v3/lego/colors/?key=abf9be335b49755a93e9a68d4186ef36`
         // `https://rebrickable.com/api/v3/lego/colors/?key=${rebrickKey}`
-        `https://rebrickable.com/api/v3/lego/themes/158/?key=${rebrickKey}`
+        `https://rebrickable.com/api/v3/lego/themes/${theme_id}/?key=${rebrickKey}`
+        // `https://rebrickable.com/api/v3/lego/sets/${set_num}-1/?key=${rebrickKey}`
       )
       .then(function (response) {
         const rebrick = response.data;
         setRebrickData(rebrick);
-        console.log(response);
+        // console.log(rebrick);
+        // console.log(response);
+        // console.log("CM_Rebrick Response:", response);
       })
       .catch(function (error) {
-        console.log("## Error: " + error);
+        console.log("CM_Rebrick Error", error);
       });
 
     /*
@@ -53,14 +56,54 @@ function Home() {
       3. function catches an error if there is one // see Rebrickable documentation for list of error codes and their meaning
       4. my goal is to change the theme_id, therefore when the theme_id changes, the rebrickData changes, 
          prompting useEffect to change the rebrick data state
-      */
-  }, [theme_id]);
+    */
+  }, [theme_id]); // the theme_id will change when the user changes pages
 
-  //  EXAMPLE OF DATA REQUEST
-  //https://rebrickable.com/api/v3/lego/colors/?key=abf9be335b49755a93e9a68d4186ef36&page=2&ordering=-name%2Cid
-  // SHORTENED TO:
+  /*
 
-  // the url searching vatiables can for the most part be the same for any React app
+
+
+
+
+
+
+
+  */
+
+  const [productNum, setProductNum] = useState("4477");
+  const [productData, setProductData] = useState(null);
+
+  // const productNumTest = "30016-1";
+  // This is the side effect to the user running with a new/different product number
+  useEffect(() => {
+    axios
+      .get(
+        `https://rebrickable.com/api/v3/lego/sets/${productNum}-1/?key=${rebrickKey}`
+        // `https://rebrickable.com/api/v3/lego/sets/${productNumTest}/?key=${rebrickKey}`
+      )
+      .then(function (response) {
+        // console.log(response);
+        const product = response.data;
+        setProductData(product);
+        console.log("CM product:", product); // use this data to record item attributes (name, number, image, etc.)
+      })
+      .catch(function (error) {
+        console.log("CM_ProductNum Error:", error);
+      });
+  }, [productNum]); // the product number will change when the user input a different number to the text box
+
+  /*
+  
+  
+  
+  
+  
+  
+  
+  */
+
+  // This manages the data displayed when the user goes to another page
+  // the url searching variables can for the most part be the same for any React app
   useEffect(() => {
     const searchParams = history.location.search;
     const urlParams = new URLSearchParams(searchParams);
@@ -82,6 +125,16 @@ function Home() {
       const city = new URLSearchParams(history.location.search).get("city")
   */
 
+  /*
+  
+  
+  
+  
+  
+  
+  
+  */
+
   const { themeName } = useMemo(() => {
     let themeName = "";
 
@@ -94,7 +147,33 @@ function Home() {
     };
   }, [rebrickData]);
 
-  console.log("rebrickData " + rebrickData);
+  const { itemName, itemImage, itemYear, itemNum } = useMemo(() => {
+    let itemName = "";
+    let itemImage = "";
+    let itemYear = "";
+    let itemNum = "";
+
+    if (productData) {
+      itemName = `${productData.name}`;
+      itemImage = `${productData.set_img_url}`;
+      itemYear = `${productData.year}`;
+      itemNum = `${productData.set_num /*.split("-")[0]*/}`;
+    }
+
+    return {
+      itemName,
+      itemImage,
+      itemYear,
+      itemNum,
+    };
+  }, [productData]);
+
+  // let userInput = document.getElementsByClassName("userInput");
+  // document
+  //   .getElementsByClassName("inputButton")
+  //   .addEventListener("click", () => {
+  //     setProductNum = userInput;
+  //   });
 
   return (
     <>
@@ -103,9 +182,22 @@ function Home() {
         <div>
           <h1>Home: Midterm</h1>
           <div className="inputBoxDiv">
-            <input className="numberInput" type="text"></input>
-            <button className="inputButton">Set</button>
-            <p>{themeName}</p>
+            <input className="userInput" type="text" id="productInput"></input>
+            <button
+              className="inputButton"
+              onClick={() =>
+                setProductNum(document.getElementById("productInput").value)
+              }
+            >
+              Set
+            </button>
+            <div className="DataContainer">
+              <p className="ThemeName">{themeName}</p>
+              <p className="ItemName">{itemName}</p>
+              <img src={itemImage} alt="Box Art" className="ItemImage"></img>
+              <p className="ItemYear">{itemYear}</p>
+              <p className="ItemNum">{itemNum}</p>
+            </div>
           </div>
         </div>
       </main>

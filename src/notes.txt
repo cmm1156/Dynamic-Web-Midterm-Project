@@ -1,0 +1,21 @@
+
+How this app will work
+1. users can choose the theme page they want
+2. the page theme will set the search criteria for the page
+-- i.e. if on the star wars page, only set numbers in the star wars theme will be looked for
+
+3. users input set number in inputbox
+4. display image of set
+5. connects to zipcode api
+6. displays the location of the zip code that corresponds with the set number
+
+
+
+
+
+
+1.
+
+
+
+GET /api/v3/lego/sets/{set_num}/minifigs/
