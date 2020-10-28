@@ -1,17 +1,123 @@
-.App {
+html {
 }
 
-.ItemImage {
-  width: 50vw;
+* {
+  margin: 0 auto;
+  padding: 0 auto;
 }
-.ItemImage img {
-  /* width: 150px; */
+
+.App {
+  margin: 0 auto;
+  padding: 0 auto;
+  /* background-color: #020438; */
+  height: 100vw;
+}
+
+.DataColumn1 {
+  grid-column: 1;
+  /* border: solid black 1px; */
+
+  /* padding-left: 5px; */
+  font-size: 24px;
+  line-height: 3em;
+}
+
+.DataColumn2 {
+  grid-column: 2;
+}
+
+.DataContainer {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 1fr;
+  border-top: solid black 2px;
+  border-bottom: solid black 2px;
+
+  padding: 15px;
+
+  /* color: #1f8ea3; */
+  /* font-size: 10px; */
+  font-weight: 600;
+}
+
+h2 {
+  font-weight: normal;
+}
+
+.Header {
+  background-color: #00b5fc;
+  padding: 15px 0px 15px 25px;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+  font-size: 20px;
+}
+
+.Header h1 {
+  font-family: "Bebas Neue", cursive;
 }
 
 .Home {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* align-content: center; */
+  margin-left: 50px;
+  margin-right: 50px;
+  background-color: #00b5fc;
+
+  border-radius: 20px;
+}
+
+.Home h1 {
+  margin-bottom: 15px;
+}
+
+.InputBoxDiv {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.InputButton {
+  background-color: red;
+  font-size: 20px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.InputButton button {
+}
+
+.ItemImage {
+  max-width: 50vw;
+  /* object-fit: contain; */
+}
+.ItemImage img {
+  /* object-fit: contain; */
+}
+
+.ItemName {
+}
+
+.ItemNum {
+}
+
+.ItemYear {
+}
+
+.LocationInfo {
   text-align: center;
+  padding: 15px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.ThemeName {
+}
+
+.TopContainer {
+  padding: 15px;
+  text-align: center;
+}
+
+.UserInput {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  width: 180px;
+  font-size: 20px;
 }
