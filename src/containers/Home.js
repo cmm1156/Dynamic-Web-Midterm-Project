@@ -1,17 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios"; // this is importing from the package.json
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 //import component files
 import Header from "../components/Header"; // imports the function Header() which writes the my header / found in the file Header.js
 
-// my Rebrickable API key
-// const rebrickKey = `abf9be335b49755a93e9a68d4186ef36`;
-// Extract hidden api keys
-// console.log("ENV VALUE:", process.env.REACT_APP_REBRICK_API_KEY);
+// API KEYs
 const rebrickKey = process.env.REACT_APP_REBRICK_API_KEY;
-const bingMapsKey = process.env.REACT_APP_BING_MAPS_API_KEY;
-const googleMapsKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+const BingMapsAPIKey = process.env.REACT_APP_BING_MAPS_API_KEY;
 
 // ##### THIS IS THE MAIN FUNCTION WHICH DISPLAYS THE ENTIRE PAGE ##### // goes down to last line of this file
 function Home() {
@@ -30,18 +26,12 @@ function Home() {
   useEffect(() => {
     axios
       .get(
-        // `https://rebrickable.com/api/v3/lego/sets/?theme_id=${theme_id}/?key=${rebrickKey}`
-        // `https://rebrickable.com/api/v3/lego/colors/?key=abf9be335b49755a93e9a68d4186ef36`
-        // `https://rebrickable.com/api/v3/lego/colors/?key=${rebrickKey}`
         `https://rebrickable.com/api/v3/lego/themes/${themeData}/?key=${rebrickKey}`
-        // `https://rebrickable.com/api/v3/lego/sets/${set_num}-1/?key=${rebrickKey}`
       )
       .then(function (response) {
         const theme = response.data;
         setThemeData(theme); // this is now new state of rebrickData
         // console.log(rebrick);
-        // console.log(response);
-        // console.log("CM themeData:", response);
       })
       .catch(function (error) {
         console.log("CM themeData Error", error);
@@ -73,97 +63,49 @@ function Home() {
   */
 
   const [productNum, setProductNum] = useState("4477");
-  // const [productNum, setProductNum] = useState("");
   const [productData, setProductData] = useState(null);
 
   const [locationData, setLocationData] = useState(null);
-  const [ImageData, setImageData] = useState(null);
 
-  // const productNumTest = "30016-1";
   // This is the side effect to the user running with a new/different product number
   useEffect(() => {
     axios
       .get(
         `https://rebrickable.com/api/v3/lego/sets/${productNum}-1/?key=${rebrickKey}`
-        // `https://rebrickable.com/api/v3/lego/sets/${productNumTest}/?key=${rebrickKey}`
       )
       .then(function (response) {
-        // console.log(response);
+        // console.log(response); // use this to narrow down wanted information
         const product = response.data;
         const theme = response.data.theme_id;
 
         setThemeData(theme);
         setProductData(product); // this now becomes the new state of 'productData'
-        console.log("CM productData:", product); // use this data to record item attributes (name, number, image, etc.)
+
+        // console.log("CM productData:", product); // use this data to record item attributes (name, number, image, etc.)
       })
       .catch(function (error) {
         console.log("CM_ProductData Error:", error);
       });
 
-    //
-    //
-    //
-
     axios
       .get(
-        // `http://dev.virtualearth.net/REST/v1/Locations/US/WA/98052/Redmond/1%20Microsoft%20Way?o=xml&key=AvmSc1iqRYyycN97F02C7TCH3ZmVfrdtrtPFsoC28TccvuXgxUKpgkbTHu0Uuyyh`
-        // `http://dev.virtualearth.net/REST/v1/Locations/US/WA/-/Ballard/-?o=xml&inclnb=1&key=${bingMapsKey}`
-        // `http://dev.virtualearth.net/REST/v1/Locations?countryRegion={countryRegion}&adminDistrict={adminDistrict}&locality={locality}&postalCode={postalCode}&addressLine={addressLine}&userLocation={userLocation}&userIp={userIp}&usermapView={usermapView}&includeNeighborhood={includeNeighborhood}&maxResults={maxResults}&key=${bingMapsKey}`
-        `http://dev.virtualearth.net/REST/v1/Locations?postalCode=${productNum}&key=${bingMapsKey}` //AvmSc1iqRYyycN97F02C7TCH3ZmVfrdtrtPFsoC28TccvuXgxUKpgkbTHu0Uuyyh`
+        // API IS LEFT VISIBLE FOR VIEWING PURPOSES BECAUSE API HAS OCCASIONAL ERRORS IN STRING LITERAL FORMAT
+        `http://dev.virtualearth.net/REST/v1/Locations?postalCode=${productNum}&key=AvmSc1iqRYyycN97F02C7TCH3ZmVfrdtrtPFsoC28TccvuXgxUKpgkbTHu0Uuyyh`
+        // `http://dev.virtualearth.net/REST/v1/Locations?postalCode=${productNum}&key=${BingMapsAPIKey}`
       )
       .then(function (response) {
         // console.log("CM locationData response", response);
         const location = response.data; // CHECK THIS .data
-        setLocationData(location.resourceSets[0].resources[0].address); //.data.resourceSets.resources[0].address.locality
-        // console.log("CM location", location);
-        // console.log(
-        //   "CM city",
-        //   location.resourceSets[0].resources[0].address.locality
-        // );
-        // console.log(
-        //   "THE PLACE",
-        //   location.resourceSets[0].resources[0].address.locality
-        // );
+        setLocationData(location.resourceSets[0].resources[0].address);
       })
       .catch(function (error) {
         console.log("CM Zipcode Error:", error);
       });
-
-    //
-    //
-    //
-
-    axios
-      .get(
-        // `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=47.5763831,-122.4211769&fov=80&heading=70&pitch=0&key=${googleMapsKey}`
-        // `https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.457375,-80.009353&key=AIzaSyCVVyLU4CfpZ4YVw6Yqxn2TWmbZUge4CAE`
-        // `https://maps.googleapis.com/maps/api/streetview?location=41.403609,2.174448&size=456x456&key=AIzaSyCVVyLU4CfpZ4YVw6Yqxn2TWmbZUge4CAE&signature=EvGQrLtO9n7PVx_MH_Bv__IxEmE=`
-        `https://maps.googleapis.com/maps/api/streetview?location=41.403609,2.174448&size=456x456&key=AIzaSyCVVyLU4CfpZ4YVw6Yqxn2TWmbZUge4CAE&signature=EvGQrLtO9n7PVx_MH_Bv__IxEmE=&signature=D4ihXo9zOHvmfSDLH1W9CjS-jxI=`
-      )
-      .then(function (response) {
-        console.log("IMAGE RES:", response);
-        const image = response;
-        setImageData(image);
-      })
-      .catch(function (error) {
-        console.log("CM Image Error:", error);
-      });
-
-    //
-    //
-    //
   }, [productNum]); // the product number will change when the user input a different number to the text box
   // SEE onClick method in button tag
 
-  // console.log("NEW locationData", locationData);
-  // console.log(
-  //   "NEW CITY",
-  //   locationData.resourceSets[0].resources[0].address.locality
-  // );
   /*
-  
-  resourceSets[0].resources[0].address.locality
-  
+    
   
   
   
@@ -211,7 +153,7 @@ function Home() {
     let themeName = "";
 
     if (themeData) {
-      themeName = `${themeData.name}`; //string // should write "Star Wars"
+      themeName = `${themeData.name}`; //string // should write "Star Wars" by default
     }
 
     return {
@@ -219,27 +161,27 @@ function Home() {
     };
   }, [themeData]);
 
-  const { itemName, itemImage, itemYear, itemNum } = useMemo(() => {
-    // let itemTheme = "";
+  const { itemName, itemImage, itemYear, itemNum, numParts } = useMemo(() => {
     let itemName = "";
     let itemImage = "";
     let itemYear = "";
     let itemNum = "";
+    let numParts = "";
 
     if (productData) {
-      // itemTheme = `${productData.theme_id}`;
       itemName = `${productData.name}`;
       itemImage = `${productData.set_img_url}`;
       itemYear = `${productData.year}`;
       itemNum = `${productData.set_num.split("-")[0]}`;
+      numParts = `${productData.num_parts}`;
     }
 
     return {
-      // itemTheme,
       itemName,
       itemImage,
       itemYear,
       itemNum,
+      numParts,
     };
   }, [productData]);
 
@@ -249,7 +191,7 @@ function Home() {
     let country = "";
 
     if (locationData) {
-      city = `${locationData.locality}`; //.resourceSets.resources[0].address.locality}`; //.resourceSets[0].resources[0].address.locality}`;
+      city = `${locationData.locality}`;
       state = `${locationData.adminDistrict}`;
       country = `${locationData.countryRegion}`;
     }
@@ -261,21 +203,27 @@ function Home() {
     };
   }, [locationData]);
 
-  // let userInput = document.getElementsByClassName("userInput");
-  // document
-  //   .getElementsByClassName("inputButton")
-  //   .addEventListener("click", () => {
-  //     setProductNum = userInput;
-  //   });
-
   return (
     <>
       <Header />
-      <main className="Home">
+      <main
+        className="Home"
+        style={{
+          backgroundColor: `rgb(${numParts},${itemYear[3] * 100},${
+            itemNum[0] * 10
+          },0.5)`,
+        }}
+      >
         <div>
           <div className="TopContainer">
             <h1>Find the geographical location of a set</h1>
-            <h2>Input a set number</h2>
+            <div className="Instructions">
+              <h3>How to use:</h3>
+              <p>- Input a set number into the form -</p>
+
+              <h3>Example numbers: 60261, 3001, 75192, 1490</h3>
+            </div>
+
             <div className="InputBoxDiv">
               <input
                 className="UserInput"
@@ -290,21 +238,26 @@ function Home() {
               >
                 Set
               </button>
+              <p>
+                Below will be the geographical location corresponding to that
+                set number
+              </p>
             </div>
           </div>
+
           <div className="DataContainer">
             <div className="DataColumn1">
-              <p className="ThemeName">Theme: {themeName}</p>
-              {/* <p>{itemTheme}</p> */}
-              <p className="ItemName">Item Name: {itemName}</p>
-
-              <p className="ItemYear">Year: {itemYear}</p>
-              <p className="ItemNum">Product No. {itemNum}</p>
+              <p className="ThemeName blend">Theme: {themeName}</p>
+              <p className="ItemName blend">Item Name: {itemName}</p>
+              <p className="ItemYear blend">Year: {itemYear}</p>
+              <p className="ItemNum blend">Product No. {itemNum}</p>
+              <p className="NumParts blend">Parts: {numParts}</p>
             </div>
             <img
               src={itemImage}
               alt="Box Art"
               className="ItemImage DataColumn2"
+              // style={{ width: `${numParts}px` }}
             ></img>
           </div>
           <p className="LocationInfo">
@@ -312,6 +265,7 @@ function Home() {
           </p>
         </div>
       </main>
+      <div className="Footer">Christopher Mancini - Dynamic Web</div>
     </>
   );
 }
