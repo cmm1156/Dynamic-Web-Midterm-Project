@@ -155,6 +155,8 @@ h2 {
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   animation-duration: 3s;
+
+  line-height: 40px;
 }
 
 .ThemeName {

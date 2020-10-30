@@ -11,6 +11,7 @@ const BingMapsAPIKey = process.env.REACT_APP_BING_MAPS_API_KEY;
 
 // ##### THIS IS THE MAIN FUNCTION WHICH DISPLAYS THE ENTIRE PAGE ##### // goes down to last line of this file
 function Home() {
+  console.log(BingMapsAPIKey);
   // const history = useHistory(); // defines history as an object of useHistory
   // const [
   //   rebrickData /* the current state*/,
@@ -89,9 +90,8 @@ function Home() {
 
     axios
       .get(
-        // API IS LEFT VISIBLE FOR VIEWING PURPOSES BECAUSE API HAS OCCASIONAL ERRORS IN STRING LITERAL FORMAT
-        `http://dev.virtualearth.net/REST/v1/Locations?postalCode=${productNum}&key=AvmSc1iqRYyycN97F02C7TCH3ZmVfrdtrtPFsoC28TccvuXgxUKpgkbTHu0Uuyyh`
-        // `http://dev.virtualearth.net/REST/v1/Locations?postalCode=${productNum}&key=${BingMapsAPIKey}`
+        // API KEY IS LEFT VISIBLE BECAUSE API HAS OCCASIONAL ERRORS WHEN USING STRING LITERAL FORMAT
+        `http://dev.virtualearth.net/REST/v1/Locations?postalCode=${productNum}&key=${BingMapsAPIKey}`
       )
       .then(function (response) {
         // console.log("CM locationData response", response);
@@ -101,6 +101,24 @@ function Home() {
       .catch(function (error) {
         console.log("CM Zipcode Error:", error);
       });
+
+    // axios
+    //   .request({
+    //     url: "/oauth/Christop-projectw-PRD-76c5590d7-49e6d8fd",
+    //     method: "get",
+    //     baseURL: "https://api.ebay.com/buy/browse/v1/",
+    //     auth: {
+    //       username: "cmm1156",
+    //       password: "j_vS4#VHS+ZS6a6",
+    //     },
+    //   })
+    //   .get(`https://api.ebay.com/buy/browse/v1/item_summary/search/`)
+    //   .then(function (response) {
+    //     console.log(response);
+    //   })
+    //   .catch(function (error) {
+    //     console.warn(error);
+    //   });
   }, [productNum]); // the product number will change when the user input a different number to the text box
   // SEE onClick method in button tag
 
@@ -216,7 +234,7 @@ function Home() {
       >
         <div>
           <div className="TopContainer">
-            <h1>Find the geographical location of a set</h1>
+            <h1>Find the postal code correlation of a set</h1>
             <div className="Instructions">
               <h3>How to use:</h3>
               <p>- Input a set number into the form -</p>
@@ -261,7 +279,9 @@ function Home() {
             ></img>
           </div>
           <p className="LocationInfo">
-            Location: {city}, {state}, {country}
+            Location:
+            <br />
+            {city}, {state}, {country}
           </p>
         </div>
       </main>
