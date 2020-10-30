@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios"; // this is importing from the package.json
-// import { useHistory } from "react-router-dom";
 
 //import component files
 import Header from "../components/Header"; // imports the function Header() which writes the my header / found in the file Header.js
@@ -11,15 +10,7 @@ const BingMapsAPIKey = process.env.REACT_APP_BING_MAPS_API_KEY;
 
 // ##### THIS IS THE MAIN FUNCTION WHICH DISPLAYS THE ENTIRE PAGE ##### // goes down to last line of this file
 function Home() {
-  console.log(BingMapsAPIKey);
-  // const history = useHistory(); // defines history as an object of useHistory
-  // const [
-  //   rebrickData /* the current state*/,
-  //   setRebrickData /*the incremental/new state*/,
-  // ] = useState(null); // sets the state (url) of the data being bulled from Rebrickable
-  // const [theme_id /*current*/, setTheme_id /*new*/] = useState("158"); // sets the state of the theme id // default is set to "158" (star wars)
-  const [themeData, setThemeData] = useState("158");
-  // const [productData, setProductData] = useState(false);
+  const [themeData /*current */, setThemeData /*new */] = useState("158");
 
   // this useEffect() will run when the variable specified in the array changes
   // in this case, useEffect() will run them the theme_id changes
@@ -32,7 +23,6 @@ function Home() {
       .then(function (response) {
         const theme = response.data;
         setThemeData(theme); // this is now new state of rebrickData
-        // console.log(rebrick);
       })
       .catch(function (error) {
         console.log("CM themeData Error", error);
@@ -81,8 +71,6 @@ function Home() {
 
         setThemeData(theme);
         setProductData(product); // this now becomes the new state of 'productData'
-
-        // console.log("CM productData:", product); // use this data to record item attributes (name, number, image, etc.)
       })
       .catch(function (error) {
         console.log("CM_ProductData Error:", error);
@@ -94,31 +82,12 @@ function Home() {
         `http://dev.virtualearth.net/REST/v1/Locations?postalCode=${productNum}&key=${BingMapsAPIKey}`
       )
       .then(function (response) {
-        // console.log("CM locationData response", response);
-        const location = response.data; // CHECK THIS .data
+        const location = response.data; // CHECK THIS .data if error occurs
         setLocationData(location.resourceSets[0].resources[0].address);
       })
       .catch(function (error) {
         console.log("CM Zipcode Error:", error);
       });
-
-    // axios
-    //   .request({
-    //     url: "/oauth/Christop-projectw-PRD-76c5590d7-49e6d8fd",
-    //     method: "get",
-    //     baseURL: "https://api.ebay.com/buy/browse/v1/",
-    //     auth: {
-    //       username: "cmm1156",
-    //       password: "j_vS4#VHS+ZS6a6",
-    //     },
-    //   })
-    //   .get(`https://api.ebay.com/buy/browse/v1/item_summary/search/`)
-    //   .then(function (response) {
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     console.warn(error);
-    //   });
   }, [productNum]); // the product number will change when the user input a different number to the text box
   // SEE onClick method in button tag
 
@@ -131,17 +100,6 @@ function Home() {
   
   */
 
-  // This manages the data displayed when the user goes to another page with a new url
-  // the url searching variables can for the most part be the same for any React app
-  // useEffect(() => {
-  //   const searchParams = history.location.search;
-  //   const urlParams = new URLSearchParams(searchParams);
-  //   const theme_id = urlParams.get("theme_id"); // ---->>>>> CHECK THIS LINE IF ERROR <<<<<<------
-  //   if (theme_id) {
-  //     setTheme_id(theme_id);
-  //   }
-  // }, [history]); // Everytime [history] array changes, this useEffect will be called
-  // history is the previous page URL
   /*
   the useEffect will run the arrow function inside
   URLSearchParams is a built-in JavaScript keyword/ it defines the utility methods to work with the query string of a URL
@@ -275,7 +233,6 @@ function Home() {
               src={itemImage}
               alt="Box Art"
               className="ItemImage DataColumn2"
-              // style={{ width: `${numParts}px` }}
             ></img>
           </div>
           <p className="LocationInfo">
